@@ -6,64 +6,278 @@
 
 \item Construcción de la conectividad física de la red
 
+  El laboratorio requiere la construcción de la topología en la figura \ref{fig:topology} usando los dispositivos 
+  disponibles en el laboratorio.
+
+    \begin{figure}[h!]
+      \center
+      \input{sections/topology-diagram.tex}
+      \caption{Topología física del laboratorio a realizar.}
+      \label{fig:topology}
+    \end{figure}
+
+  Para esta parte del laboratorio se usaron los siguientes dispositivos
+    \begin{itemize}
+      \item 1 computador Windows de la sala 404 del CyT.
+      \item 1 switch \code{C2960} marca Cisco.
+      \item 1 router \code{4321} marca Cisco.
+      \item 1 hub \code{BayStack 151 10BASET}.
+    \end{itemize}
+
+  En la figura \ref{fig:equipos}, se evidencia su utilización 
+  y en la figura \ref{fig:conexiones} se evidencian las conexiones requeridas para la práctica.
+
+    \begin{figure}[h!]
+      \center
+      \includegraphics[width=10cm]{figures/equipos}
+      \caption{Imagen de los dispositivos usados en la práctica.}
+      \label{fig:equipos}
+    \end{figure}
+
+    \begin{figure}[h!]
+      \center
+      \includegraphics[width=10cm]{figures/conexiones}
+      \caption{Imagen de las conexiones usadas en la práctica.}
+      \label{fig:conexiones}
+    \end{figure}
+
 \paragraph{¿Cuál es la diferencia entre un cable de UTP directo y uno cruzado?}
 
-\subsubsection*{Evidencias}
-\begin{itemize}
-\item Fotografías de la topología física.
-\item Fotografías de los dispositivos utilizados.
-\item Evidencia del cableado realizado.
-\end{itemize}
+  Para cables UTP existen 2 estándares, \code{T568A} y \code{T568B} como se muestra en la figura \ref{fig:utp}.
 
+    \begin{figure}[h!]
+      \center
+      \input{sections/utp-directo-cruzado.tex}
+      \caption{Diagrama que muestra la conexión de un cable UTP cruzado vs directo.}
+      \label{fig:utp}
+    \end{figure}
+
+    Estos estándares dictan dónde se posicionan los pines de transmitir y recibir (\code{Tx} y \code{Rx}).
+    Cuando se habla de un cable UTP directo, se refiere a un cable en el que ambos lados son del mismo estándar, 
+    mientras que un cable cruzado tiene estándares diferentes.
+
+    Esto significa que un cable UTP directo, sin importar si es \code{T568A} o \code{T568B}, no cambia la 
+    organización de los cables.
+    Por el contrario, un cable UTP cruzado va a cambiar la organización de los cables.
+
+    Se hace así porque los puertos de los dispositivos de red (como routers o switches) tienen una 
+    organización diferente a los puertos de los dispositivos finales (como computadores).
+    De modo que una conexión entre un switch y un computador requiere solo un cable directo porque los puertos 
+    están físicamente organizados para que \code{Tx} vaya a \code{Rx} y viceversa.
+    Pero en las ocasiones en que se requiere conectar 2 dispositivos de red, lo que causa que los puertos se vayan 
+    en la dirección incorrecta, por esto se requiere un cable UTP cruzado.
+
+    Aunque dispositivos \textit{modernos} pueden detectar la configuración incorrecta y corregirla internamente, 
+    como es el caso del switch \code{C2960}, de acuerdo con el fabricante \cite{cisco_2960_auto_mdix}.
+    Por tanto, es irrelevante que el switch utilizado use un cable cruzado en este laboratorio.
 
 \item Configuración básica de los equipos
 
+  Se conectó el router y el switch, cada uno a un computador diferente, a través de serial para configurar 
+  las siguientes partes:
+  \begin{itemize}
+    \item Nombre del dispositivo.
+    \item Banner adecuado.
+    \item Agregar secreto.
+    \item Agregar contraseña al modo de configuración.
+    \item Agregar contraseña a la consola.
+    \item Agregar contraseña a la terminal virtual (sobre red).
+  \end{itemize}
+
+  A continuación se muestran los comandos que se ejecutaron en cada dispositivo por separado.
+
+  \paragraph{Router}
+  \begin{center}
+  \begin{minted}{text}
+Router-A> ena
+Router-A# configure terminal
+Router-A( config)# hostname Router # Change device name
+Router( config)# enable password cisco123 # Change admin password
+Router( config)# banner motd $
+ROUTER PARA ENTORNO DE PRUEBA CON EL HUB Y SNIFFER
+$
+Router( config)# enable secret cisco321 # Create secret
+Router( config)# line console 0
+Router(config-line)# password cisco123
+Router(config-line)# exit
+Router( config)# line vty 0 15
+Router(config-line)# password cisco123
+Router(config-line)# exit
+Router( config)# exit
+  \end{minted}
+  \end{center}
+
+  \paragraph{Switch} 
+  \begin{center}
+  \begin{minted}{text}
+SWITCH-A> ena
+SWITCH-A# configure terminal
+SWITCH-A( config)# hostname SW-A # Change device name
+SW-A( config)# enable password admin # Change admin password
+SW-A( config)# banner motd $
+Este es el switch A, por favor no romper.
+$
+SW-A( config)# enable secret secret # Create secret
+SW-A( config)# line console 0
+SW-A(config-line)# password console0
+SW-A(config-line)# exit
+SW-A( config)# line vty 0 15
+SW-A(config-line)# password vty015
+SW-A(config-line)# exit
+SW-A( config)# exit
+  \end{minted}
+  \end{center}
+
+\subparagraph{Evidencias} A continuación, las evidencias de la configuración del switch y el router
+\input{sections/evidencias-switch}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/evidencia-router/ip.jpeg}
+    \caption{Configuración de la dirección IP y configuracion basica en el router.}
+    \label{fig:router_ip}
+\end{figure}
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/evidencia-router/secreto.jpeg}
+    \caption{Configuración del secreto en el router.}
+    \label{fig:router_secreto}
+\end{figure}
+
 \paragraph{¿Por qué se realiza toda esta configuración básica a los dispositivos 
-    Switch y Router?}
+    switch y router?}
+
+Dado que los dispositivos que vienen con configuración de fábrica no tienen ninguna contraseña, son vulnerables a
+ataques bastante simples. Las configuraciones, específicamente las contraseñas, permiten agregar una capa de seguridad
+contra actores maliciosos. También se configuró el nombre del dispositivo en terminal para que sea más fácil
+diferenciarlo; esto es especialmente útil si no se está físicamente cerca del dispositivo. Además, se activó el acceso a
+terminal de manera remota, con su respectiva contraseña.
+
 
 \subsubsection*{Evidencias}
 \begin{itemize}
-\item Capturas de la configuración en la CLI del Switch.
-\item Capturas de la configuración en la CLI del Router.
-\item Fotografías de la conexión por consola.
+\item Capturas de la configuración en la CLI del router.
 \end{itemize}
 
 
 \item Configuración del TCP/IP
 
+\paragraph{Switch} Primero se entró al switch a configurarlo con la IP \code{10.0.0.4}:
+\begin{minted}{text}
+SW-A> ena
+SW-A# configure terminal
+SW-A( config)# interface vlan 1
+SW-A(config-if)# no shutdown
+SW-A(config-if)# ip address 10.0.0.4 255.0.0.0
+SW-A(config-if)# exit
+SW-A( config)# exit
+\end{minted}
+Se evidencian los comandos usados en la figura \ref{fig:switch_ip}
+
+\paragraph{Router} Luego se configuró el router con la IP \code{10.0.0.1}:
+\begin{minted}{text}
+Router> ena
+Router# configure terminal
+Router( config)# interface GigabitEthernet0/0
+Router(config-if)# no shutdown
+Router(config-if)# ip address 10.0.0.1 255.0.0.0
+Router(config-if)# exit
+Router( config)# exit
+\end{minted}
+
+\paragraph{Computador} Y por último se configuró el computador, el cual, al ser Windows, solo requirió 
+entrar en una GUI y llenar el formulario de la misma.
+
 \paragraph{¿Por qué la configuración del direccionamiento IP es distinta entre un PC, 
 un switch, un router y un hub?}
 
+Para empezar, un hub es un dispositivo \textit{estúpido}, solo envía todo lo que recibe a todo lo 
+que está conectado; no es configurable remotamente porque no es configurable en sí, prácticamente es un cable 
+más complejo. Por tanto, no se le asigna ni configura una IP.
+
+Por el contrario, un router maneja el enrutamiento y por tanto requiere una IP y una subred para saber 
+\textit{dónde está} en el árbol de todas las posibles IP. Además, puesto que el enrutamiento puede incluir 
+múltiples subredes, el router requiere saber con qué IP se presenta en cada puerto.
+
+Mientras que un switch no maneja enrutamiento y no es un dispositivo activo en ninguna conexión 
+excepto como medio por el cual se realiza la conexión. Esto sin incluir configuraciones administrativas 
+remotas, que es una de las únicas razones por las que se le asigna una IP a un switch.
+
 \paragraph{¿Por qué se asigna el direccionamiento del switch en la interfaz VLAN 1, 
-mientras que al router se le asigna en otra interfaz?}
+mientras que al router se le asigna en otra interfaz?} Porque el direccionamiento IP de un switch es para configurarlo
+remotamente, mientras que el direccionamiento IP de un router es para que el router pueda \textit{enrutar} acorde a la
+subred de la que está recibiendo y enviando los paquetes. Un router está hecho para enrutar y necesita un puerto
+por cada subred que está manejando. Un switch no; un switch solo requiere una IP para administración.
+
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/evidencias-switch/switch_ip.png}
+    \caption{Configuración de la dirección IP en el switch.}
+    \label{fig:switch_ip}
+\end{figure}
 
 \subsubsection*{Evidencias}
 \begin{itemize}
-\item Capturas de la configuración de red del PC.
-\item Capturas de la configuración de la interfaz VLAN del Switch.
-\item Capturas de la configuración de la interfaz del Router.
-\item Evidencia de la configuración del Hub.
+\item Capturas de la configuración de la interfaz del router.
 \end{itemize}
 
 
 \item Pruebas de conectividad End-to-End (E2E)
 
-\paragraph{¿Se pudo realizar la prueba?}
+  Una vez realizadas las conexiones y configuraciones anteriores, se ejecutaron las pruebas de 
+  conectividad usando el comando \code{ping}.
 
-\paragraph{¿Cómo se realizó la prueba? (Modo del dispositivo y comandos)}
+  \paragraph{PC-A — SW-A}
+  \begin{itemize}
+    \item \textbf{¿Se pudo realizar la prueba?} Sí, aunque este tal vez no sea el resultado esperado si se considera el
+      uso de un cable UTP cruzado. Sin embargo, como se mencionó anteriormente, el switch utilizado en la práctica usa
+      auto MDI/MDIX, por lo que no importa si se usa cable directo o cruzado.
+    \item \textbf{¿Cómo se realizó la prueba?} Se utilizó la terminal de Windows (\textit{CMD}) con el comando \code{ping}.
+    \item \textbf{¿La prueba fue exitosa?} Sí.
+  \end{itemize}
 
-\paragraph{¿Qué mensaje apareció después de hacer la prueba y qué significa?}
+  \paragraph{PC-A — Router}
+  \begin{itemize}
+    \item \textbf{¿Se pudo realizar la prueba?} Sí, pero la primera prueba falló.
+    \item \textbf{¿Qué ocurrió?} Inicialmente se recibió el mensaje “Host de destino inaccesible”.
+    \item \textbf{Solución:} Se corrigió la conexión física entre el router y el switch.
+    \item \textbf{Resultado final:} La prueba fue exitosa.
+  \end{itemize}
 
-\paragraph{¿La prueba fue exitosa o no?}
+  \paragraph{Router — SW-A}
+  \begin{itemize}
+    \item \textbf{¿Se pudo realizar la prueba?} Sí.
+    \item \textbf{Resultado:} Conectividad exitosa sin problemas.
+  \end{itemize}
 
-\paragraph{¿Cuál es el propósito y utilidad de realizar estas pruebas de 
-conectividad end-to-end en una red y de ICMP?}
+\paragraph{¿Cuál es el propósito de estas pruebas?}
 
-\subsubsection*{Evidencias}
-\begin{itemize}
-\item Capturas de los comandos \code{ping}.
-\item Resultados de las pruebas desde los distintos dispositivos.
-\item Evidencia de las respuestas ICMP.
-\end{itemize}
+Permiten verificar el correcto funcionamiento de la red y diagnosticar errores. Son comparables al uso de un multímetro
+en circuitos eléctricos, ya que ayudan a identificar fallas y validar el sistema.
 
+\paragraph{Evidencias}
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/evidencias-conectividad/pc-router-fallida.png}
+    \caption{Intento fallido de conectividad entre el PC y el router.}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/evidencias-conectividad/pc-switch.jpeg}
+    \caption{Conectividad exitosa entre el PC y el switch.}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/evidencias-conectividad/router-switch.jpeg}
+    \caption{Conectividad entre el router y el switch.}
+\end{figure}
+
+\begin{figure}[h!]
+    \centering
+    \includegraphics[width=0.8\textwidth]{figures/evidencias-conectividad/router-computador-y-router-switch.jpeg}
+    \caption{Conectividad completa entre router, computador y switch.}
+\end{figure}
+
+\clearpage
 \end{enumerate}

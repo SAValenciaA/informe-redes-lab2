@@ -1,0 +1,26 @@
+% !TEX root =../main.tex
+
+\begin{tikzpicture}[
+    node distance=3cm,
+    every node/.style={font=\small, align=center}
+]
+
+% Nodes
+\node (pc) 
+{\includegraphics[width=2cm]{figures/cisco/pc}\\PC-A};
+
+\node (hub) [right=of pc] 
+{\includegraphics[width=2cm]{figures/cisco/hub}\\Hub};
+
+\node (router) [above right=1.5cm and 2.5cm of hub] 
+{\includegraphics[width=2cm]{figures/cisco/router}\\Router};
+
+\node (sw) [below right=1.5cm and 2.5cm of hub] 
+{\includegraphics[width=2cm]{figures/cisco/workgroup_switch}\\SW-A};
+
+% Links
+\draw[thick] (pc) -- (hub);
+\draw[thick] (hub) -- (router);
+\draw[thick, dashed] (hub) -- (sw);
+
+\end{tikzpicture}

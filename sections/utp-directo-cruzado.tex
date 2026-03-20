@@ -1,0 +1,33 @@
+% !TEX root =../main.tex
+
+\begin{tikzpicture}[]
+  \begin{scope}[shift={(-4,0)}] 
+    \newcommand{\standard}{T568A}
+    \newcommand{\pinslist}{
+      1/green-strips/Tx+,
+      2/green/Tx-,
+      3/orange-strips/Rx+,
+      4/blue/Bi+,
+      5/blue-strips/Bi-,
+      6/orange/Rx-,
+      7/brown-strips/Bi+,
+      8/brown/Bi-
+    }
+    \input{sections/utp-base}
+  \end{scope}
+  \begin{scope}[shift={(4,0)}] 
+    \newcommand{\standard}{T568B}
+    \newcommand{\pinslist}{
+      1/orange-strips/Rx+,
+      2/orange/Rx-,
+      3/green-strips/Tx+,
+      4/blue/Bi+,
+      5/blue-strips/Bi-,
+      6/green/Tx-,
+      7/brown-strips/Bi+,
+      8/brown/Bi-
+    }
+    \input{sections/utp-base}
+  \end{scope}
+
+\end{tikzpicture}

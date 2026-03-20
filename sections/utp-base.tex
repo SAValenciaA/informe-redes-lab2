@@ -1,0 +1,48 @@
+  \draw[ultra thick] 
+  (-3.5,-3) rectangle (3.5,3);
+
+  \draw[ultra thick] 
+  (-2,3) rectangle (2,4) 
+  node[pos=0.5,align=center] 
+  {\code{\standard}};
+
+  \foreach \x / \color / \name in \pinslist {
+    \pgfmathsetmacro{\y}{\x/2}
+
+    \pgfmathsetmacro{\bottom}{-2}
+    \pgfmathsetmacro{\top}{1}
+
+    \pgfmathsetmacro{\thick}{0.8}
+    \pgfmathsetmacro{\gap}{0.1}
+
+    \pgfmathsetmacro{\start}{-3}
+    \pgfmathsetmacro{\end}{3}
+    \pgfmathsetmacro{\step}{8}
+
+
+    \pgfmathsetmacro{\dx}{\x*((\end - \start)/\step) + \start - \thick}
+
+    \coordinate (A) at (\dx + \gap, \top);
+    \coordinate (B) at (\dx + \thick - \gap, \bottom);
+
+    \coordinate (sA) at (\dx + \gap, 2.5);
+    \coordinate (sB) at (\dx + \thick - \gap, 1.5);
+
+    \IfEndWith{\color}{strips}{
+      \StrBefore{\color}{-strips}[\basecolor]
+      \draw
+        [ultra thick, 
+        pattern=checkerboard, 
+        pattern color=\basecolor] 
+        (A) rectangle (B);
+    }{
+      \draw[ultra thick, fill=\color] 
+      (A) rectangle (B);
+    }
+
+    \draw [ultra thick,fill=yellow] 
+      (sA) rectangle (sB) 
+      node[pos=0.5,align=center] 
+      {\footnotesize \code{\x} \\ \footnotesize \code{\name}};
+}
+
