@@ -2,27 +2,73 @@
 
 \begin{enumerate}[resume=labsteps]
 
-\item Pruebas de conectividad por red
+\item \textbf{Pruebas de conectividad por red}
 
-\paragraph{¿Se pudo realizar la prueba?}
+Para continuar verificando la conectividad de red 
+en el escenario del equipo \textit{Hub}, se debe revisar si 
+este permite que los demás dispositivos de la red 
+se conecten entre sí a través de sus \textbf{interfaces virtuales}
+ o consolas remotas. 
+ 
+Para realizar esta prueba, se debe acceder a la línea de comandos 
+de cada dispositivo \textit{(a excepción del Hub, que no posee una)}, 
+sin necesidad de entrar en modo privilegiado. En los computadores se 
+ingresa al \textit{CMD}, mientras que para el \textit{Switch} y el 
+\textit{Router} se utiliza la misma \textit{CLI (Command Line Interface)} 
+empleada para su configuración. Una vez en la terminal, solo es necesario 
+ejecutar el comando \texttt{\textbf{telnet}} seguido de la dirección \textit{IP} 
+del dispositivo al que se desea acceder. Finalmente, si la conexión es exitosa y 
+ambos dispositivos fueron configurados correctamente, debería aparecer el 
+\textit{banner} del equipo y solicitar la clave definida para las líneas \textit{VTY} 
+mediante el comando \texttt{line vty 0 15}; tras ingresarla, se permitirá el acceso 
+remoto a la consola del dispositivo destino.
 
-\paragraph{¿Cómo se realizó la prueba? (Modo del dispositivo y comandos)}
+Al realizar esta prueba en la red diseñada para el laboratorio del \textit{Hub}, se 
+pudo observar que tanto las conexiones como la configuración se ejecutaron de manera 
+correcta, obteniendo éxito en la prueba de \texttt{telnet} (o \textit{TCP}), al igual 
+que en la anterior. Desde cada uno de los dispositivos se realizaron las pruebas para 
+contactar con los demás, obteniendo los siguientes resultados:
 
-\paragraph{¿Qué mensaje apareció después de hacer la prueba y qué significa?}
+\begin{table}[H]
+\centering
+\caption{Resultados de las pruebas de conectividad Telnet}
+\begin{tabular}{|c|c|c|}
+\hline
+\textbf{Origen} & \textbf{Destino} & \textbf{Evidencia} \\ \hline
+PC-A & Router & $\vcenter{\hbox{\includegraphics[width=0.3\textwidth]{{figures/evidencias-telnet/telnet Pc-Rou.jpeg}}}}$ \\ \hline
+PC-A & Switch & $\vcenter{\hbox{\includegraphics[width=0.3\textwidth]{{figures/evidencias-telnet/telnet Pc-sw.jpeg}}}}$ \\ \hline
+Switch & Router & $\vcenter{\hbox{\includegraphics[width=0.3\textwidth]{{figures/evidencias-telnet/telnet Sw-Rou.jpeg}}}}$ \\ \hline
+Router & Switch & $\vcenter{\hbox{\includegraphics[width=0.3\textwidth]{{figures/evidencias-telnet/telnet Rou-sw.jpeg}}}}$ \\ \hline
+\end{tabular}
+\end{table}
 
-\paragraph{¿La prueba fue exitosa o no?}
+
+Realizar estas pruebas de conexión es fundamental, ya que permiten 
+al administrador confirmar múltiples aspectos de la red de manera 
+simultánea. No solo validan que el direccionamiento \textit{IP} y la 
+configuración de seguridad sean correctos, sino que, primordialmente, 
+verifican el flujo de datos y la funcionalidad de los servicios; es decir, 
+la interacción real entre los dispositivos. En este escenario, aunque el 
+\textit{Hub} es un equipo sencillo, resulta crucial comprobar que cumple 
+su función replicando la información de manera íntegra y manteniendo un 
+tráfico eficaz en la red.
 
 \paragraph{¿Cuál es el propósito y utilidad de realizar estas pruebas de conectividad 
 por red y de Telnet?}
 
-\subsubsection*{Evidencias}
-\begin{itemize}
-\item Capturas de las sesiones Telnet.
-\item Evidencia de ingreso a los dispositivos.
-\item Resultados observados durante las pruebas.
-\end{itemize}
 
-\item Conclusiones de parte A
+\item \textbf{Conclusiones de parte A}
+
+El uso de un \textit{Hub} como dispositivo de interconexión para formar una 
+red constituye un ejemplo claro y fundamental para comprender la interacción 
+entre equipos físicos. Ya sea mediante la verificación de conectividad básica
+ con \textit{echo requests} (\texttt{ping}) o a través de la administración remota 
+ de dispositivos (\texttt{telnet}), este escenario permite asimilar el funcionamiento 
+ de una \textit{LAN} a pequeña escala. Comprender el rol y la configuración (\textit{setup}) 
+ de cada elemento —\textit{switch}, \textit{router} y cliente— es esencial para proyectar 
+ estos conocimientos en aplicaciones más robustas y correctas dentro de escenarios reales o 
+ laboratorios de mayor complejidad técnica en el futuro.
+
 
 \end{enumerate}
 
@@ -31,37 +77,169 @@ por red y de Telnet?}
 
 \begin{enumerate}[resume=labsteps]
 
-\item Sniffer y captura de PDUs
+\item \textbf{Sniffer y captura de PDUs}
 
 %%% AQUI PREGUNTA ACERCA DEL SNIFFER CON ICMP
 
-\paragraph{¿La prueba ICMP de PC-A a SW-A cambió en su respuesta con respecto al paso 
-anterior?}
+Un \textit{sniffer}, o analizador de tráfico, es una herramienta de \textit{hardware} 
+o \textit{software} diseñada para interceptar, registrar y analizar el flujo de datos 
+en una red informática. Su funcionamiento se basa en cambiar el comportamiento de la 
+tarjeta de red para que deje de "escuchar" únicamente el tráfico dirigido a su propia 
+dirección y comience a capturar y almacenar toda la información que circula por el medio. 
+Al trabajar con un \textit{Hub}, dispositivo que carece de una tabla de direcciones MAC, 
+este replica todas las \textit{PDU}s o tramas a todos sus puertos. Por lo tanto, en este 
+escenario, un \textit{sniffer} puede detectar la totalidad de las comunicaciones que atraviesan 
+el \textit{Hub}, independientemente del destinatario original de los datos.
 
-\paragraph{¿Qué se puede observar en el Sniffer?}
+Se realizaron nuevamente las pruebas de conectividad incorporando un \textit{sniffer} al 
+escenario mediante un computador con \textit{Wireshark}. Este programa es una herramienta 
+de captura y análisis de tráfico de red, consolidándose como una opción excelente para 
+examinar este caso de estudio. Al iniciar las pruebas, resultó evidente que para los demás 
+dispositivos (\textit{switch}, \textit{router}, \textit{hub} y PC-A) no existen variaciones 
+perceptibles en su funcionamiento, manteniendo las mismas respuestas y reacciones en los 
+protocolos \textit{ICMP} y \textit{TCP} observadas previamente.
 
-\paragraph{¿Qué es y qué puede significar lo que se observa en Wireshark?}
+Al centrar la atención en el \textit{sniffer} tras iniciar la captura, se despliega una lista 
+en constante actualización que representa el tráfico detectado en la red. La información visualizada 
+incluye el tiempo, el origen y destino del flujo, el tipo de protocolo, la longitud del paquete y datos 
+adicionales de la captura. Mediante las herramientas de filtrado del programa, es posible aislar el protocolo 
+específico de la prueba en curso. En el caso de las pruebas \textit{ICMP}, el \textit{sniffer} identifica en su 
+sección de detalles el intercambio de \textit{echo request} y \textit{echo reply} generado por el comando 
+\texttt{ping}, replicando la información que se observa simultáneamente en las terminales de los dispositivos.
 
-%%% AQUI PREGUNTA ACERCA DEL SNIFFER CON TELNET
+Al repetir el ejercicio con el protocolo \textit{TCP} durante la sesión de \texttt{telnet}, la estructura de 
+los datos es similar a la del \texttt{ping}, aunque la información adicional es más específica sobre la actividad 
+en curso. A pesar de la complejidad técnica de los paquetes \textit{TCP}, al inspeccionar los detalles de la captura 
+se vuelven comprensibles las acciones realizadas mediante la \textit{CLI} (comandos ejecutados o cambios de configuración). 
+Un hallazgo crítico es la exposición de las contraseñas de las líneas \textit{VTY} y del modo privilegiado, las cuales viajan 
+de manera desprotegida; esto demuestra cómo un \textit{sniffer} puede comprometer información sensible en un escenario con estas 
+características.
 
-\paragraph{¿El telnet desde PC-A a Router cambió en su respuesta con respecto al paso 
-anterior?}
-
-\paragraph{¿Qué se puede observar en el Sniffer?}
-
-\paragraph{¿Qué es y qué puede significar lo que se observa en Wireshark?}
-
-\paragraph{¿El sniffer podría conseguir averiguar las contraseñas de acceso al 
-Router?}
+\vspace*{\fill}
 
 \subsubsection*{Evidencias}
 \begin{itemize}
-\item Capturas de Wireshark con filtro ICMP.
-\item Capturas de Wireshark con filtro Telnet.
-\item Evidencia del tráfico observado por el Sniffer.
+\item Capturas de Wireshark con filtro ICMP:
+
+\medskip
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{{figures/evidencias-wireshark/ICMP foto}}
+    \caption{Captura de tráfico ICMP (Ping) visualizada en Wireshark.}
+    \label{fig:wireshark-icmp}
+\end{figure}
+
+
+\item Capturas de Wireshark con filtro Telnet:
+
+\medskip
+\begin{figure}[H]
+    \centering
+    \includegraphics[width=0.8\textwidth]{{figures/evidencias-wireshark/TCP foto}}
+    \caption{Captura de tráfico TCP (Telnet) con exposición de datos en Wireshark.}
+    \label{fig:wireshark-tcp}
+\end{figure}
+
+
+\item Evidencia del tráfico observado por el Sniffer:
+
+\medskip
+\textit{ICMP:}
+\begin{verbatim}
+"No.","Time","Source","Destination","Protocol","Length","Info"
+"67","17.382055200","10.0.0.2","10.0.0.4","ICMP","74" ....
+"68","17.382182700","10.0.0.4","10.0.0.2","ICMP","74" ....
+"70","18.399980500","10.0.0.2","10.0.0.4","ICMP","74" ....
+"71","18.400391600","10.0.0.4","10.0.0.2","ICMP","74" ....
+"76","19.411786100","10.0.0.2","10.0.0.4","ICMP","74" ....
+"77","19.414531500","10.0.0.4","10.0.0.2","ICMP","74" ....
+"81","20.421711600","10.0.0.2","10.0.0.4","ICMP","74" ....
+"82","20.422683700","10.0.0.4","10.0.0.2","ICMP","74" ....
+\end{verbatim}
+
+\textit{TCP:}
+\begin{verbatim}
+"No.","Time","Source","Destination","Protocol","Length","Info"
+"17","4.873243100","10.0.0.2","10.0.0.1","TCP","66",3 ...
+"18","4.873243100","10.0.0.1","10.0.0.2","TCP","60",1 ...
+"19","4.875830400","10.0.0.2","10.0.0.1","TCP","60",3 ...
+"20","4.875830400","10.0.0.1","10.0.0.2","TELNET","6o ...
+"21","4.876945100","10.0.0.1","10.0.0.2","TELNET","9v ...
+"22","4.878475700","10.0.0.2","10.0.0.1","TCP","60",u ...
+"23","4.878475700","10.0.0.2","10.0.0.1","TELNET","6a ...
+"27","5.080094300","10.0.0.1","10.0.0.2","TCP","60",u ...
+"28","5.081137900","10.0.0.2","10.0.0.1","TELNET","7v ...
+"29","5.081137900","10.0.0.1","10.0.0.2","TELNET","6e ...
+"30","5.085359900","10.0.0.2","10.0.0.1","TELNET","6e ...
+"31","5.286567900","10.0.0.1","10.0.0.2","TCP","60",u ...
+"59","12.161680000","10.0.0.2","10.0.0.1","TELNET","e ...
+"61","12.361987100","10.0.0.1","10.0.0.2","TCP","60"9 ...
+"62","12.361987100","10.0.0.2","10.0.0.1","TELNET","d ...
+"64","12.563436100","10.0.0.1","10.0.0.2","TCP","60"9 ...
+"65","12.564484300","10.0.0.2","10.0.0.1","TELNET","d ...
+"67","12.764518400","10.0.0.1","10.0.0.2","TCP","60"9 ...
+"68","12.765308000","10.0.0.2","10.0.0.1","TELNET","  ...
+"69","12.965910400","10.0.0.1","10.0.0.2","TCP","60"9 ...
+"74","13.569250400","10.0.0.2","10.0.0.1","TELNET","d ...
+"76","13.769403500","10.0.0.1","10.0.0.2","TCP","60"9 ...
+"77","13.770174800","10.0.0.2","10.0.0.1","TELNET","d ...
+"78","13.971361300","10.0.0.1","10.0.0.2","TCP","60"9 ...
+"79","13.971974400","10.0.0.2","10.0.0.1","TELNET","d ...
+"81","14.172915600","10.0.0.1","10.0.0.2","TCP","60"9 ...
+"82","14.172915600","10.0.0.2","10.0.0.1","TELNET","  ...
+"83","14.173402600","10.0.0.1","10.0.0.2","TELNET","  ...
+"84","14.228724600","10.0.0.2","10.0.0.1","TCP","60"  ...
+"116","22.881962900","10.0.0.2","10.0.0.1","TELNET",  ...
+"117","22.881962900","10.0.0.1","10.0.0.2","TELNET",r ...
+"118","22.935312100","10.0.0.2","10.0.0.1","TCP","60  ...
+"119","22.977327100","10.0.0.2","10.0.0.1","TELNET",  ...
+"120","22.977327100","10.0.0.1","10.0.0.2","TELNET",  ...
+"122","23.030336500","10.0.0.2","10.0.0.1","TCP","60  ...
+"123","23.041896600","10.0.0.2","10.0.0.1","TELNET",  ...
+"124","23.042350500","10.0.0.1","10.0.0.2","TELNET",  ...
+"126","23.094577300","10.0.0.2","10.0.0.1","TCP","60  ...
+"127","23.153663800","10.0.0.2","10.0.0.1","TELNET",  ...
+"128","23.153663800","10.0.0.1","10.0.0.2","TELNET",  ...
+"129","23.205827400","10.0.0.2","10.0.0.1","TCP","60  ...
+"130","23.297900200","10.0.0.2","10.0.0.1","TELNET",  ...
+"131","23.298387000","10.0.0.1","10.0.0.2","TELNET",  ...
+"132","23.348629300","10.0.0.2","10.0.0.1","TCP","60  ...
+"133","23.537768600","10.0.0.2","10.0.0.1","TELNET",  ...
+"134","23.538156000","10.0.0.1","10.0.0.2","TELNET",  ...
+"135","23.588320500","10.0.0.2","10.0.0.1","TCP","60  ...
+"136","23.633371900","10.0.0.2","10.0.0.1","TELNET",  ...
+"137","23.633371900","10.0.0.1","10.0.0.2","TELNET",  ...
+"138","23.683906000","10.0.0.2","10.0.0.1","TCP","60  ...
+"140","23.807700900","10.0.0.2","10.0.0.1","TELNET",  ...
+"141","23.808947800","10.0.0.1","10.0.0.2","TELNET",  ...
+"142","23.859881400","10.0.0.2","10.0.0.1","TCP","60  ...
+"143","23.970042300","10.0.0.2","10.0.0.1","TELNET",  ...
+"144","23.970390700","10.0.0.1","10.0.0.2","TELNET",  ...
+... 
+... 
+... 
+\end{verbatim}
+
+
+
+
 \end{itemize}
 
-\item Conclusiones de parte B
+\item \textbf{Conclusiones de parte B}
+
+La integración de un \textit{sniffer} (analizador de tráfico) con una herramienta como 
+\textit{Wireshark} permite monitorear de forma constante y eficiente el flujo de datos 
+en cualquier entorno de \textit{hardware} o \textit{software}. Una demostración clara 
+de su alcance es el análisis de los protocolos \textit{ICMP} y \textit{TCP} realizado 
+en este escenario. No obstante, este análisis también revela vulnerabilidades críticas, 
+como la exposición de credenciales y contraseñas que viajan sin cifrado por la red.
+
+En conclusión, el uso del \textit{sniffer} en una topología basada en \textit{hubs} 
+evidencia que la seguridad de la información no depende solo del correcto direccionamiento, 
+sino de la robustez de los protocolos utilizados. La facilidad con la que se interceptaron 
+datos sensibles subraya la importancia de migrar hacia protocolos cifrados (como \textit{SSH}) 
+y dispositivos de conmutación inteligentes (\textit{switches}) para garantizar la privacidad e 
+integridad de las comunicaciones en redes modernas.
 
 \end{enumerate}
 
