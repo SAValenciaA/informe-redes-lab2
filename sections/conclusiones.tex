@@ -1,3 +1,36 @@
 % !TEX root =../main.tex
 
 \section{Conclusiones}
+A partir de el desarrollo de la pactica:
+Un Hub es un dispositivo de red que funciona
+en la capa 1 de el modelo OSI que permite
+a otros dispositivos de red conectarse entre 
+sí al retransmitir los datos que llegan por 
+un puerto Ethernet a todos los demás puertos, 
+solo permite transmisión half-duplex, lo que significa
+que reciben información o envían, pero no en simultáneo.
+Pueden ser utilizados para conectar varios dispositivos 
+de red cuando el ancho de banda no es exigente.\cite{hub_coursera}
+Al ser un dispositivo de capa 1 no tiene ninguna
+capacidad de configurarse por lo que no se le puede brindar seguridad.
+\\
+El Protocolo de control de mensajes de Internet (ICMP)
+es un protocolo de capa 3 de el modelo OSI que se utiliza para 
+diagnosticar problemas en la comunicación de la red.
+Su uso principal permite determinar si los datos llegan o no 
+en un tiempo dado. Una prueba ICMP puede 
+realizarse con herramientas como traceroute y ping, de las cuales ping
+prueba la velocidad de la conexión entre dos dispositivos y informa el 
+tiempo que se tarda un paquete de datos en llegar al destino y volver a remitente.
+El protocolo ICMP tiene su propio paquete que contiene un encabezado ICMP y un
+encabezado de direccionamiento IP.\cite{icmp_cloudflare}
+\\
+Una conexión Telnet es una transmisión sobre TCP usada para transmitir datos
+intercalados con información de control Telnet.\cite{telnet_RFC} El protocolo Telnet es utilizado
+para el acceso remoto por red a computadores (o dispositivos de red), es un protocolo
+de cliente-servidor que provee al usuario una sesión de terminal  al dispositivo 
+remoto desde la aplicación Telnet del cliente. Este protocolo no ofrece ningún tipo
+de seguridad por lo que es vulnerable a ataques en los que un agente pueda escuchar 
+los datos transmitidos. Hoy en día se utiliza SSH(Secure Shell) como alternativa
+segura para la conexión remota.\cite{telnet_shh_academy}
+\\
